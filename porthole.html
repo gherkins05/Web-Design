@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                background-color: #000000; 
+                margin: 0; 
+                height: 100vh; 
+                overflow: hidden; 
+                display: flex; 
+                justify-content: center; 
+                align-items: center;
+                cursor: none;
+            }
+            #text {
+                max-height: 50vh;
+                max-width: 50vh;
+                border-radius: 5%;
+                word-wrap: break-word; 
+                text-align: center; 
+                overflow: hidden;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 15px;
+                background-image: radial-gradient(circle at 50% 50%, #0cff00 0%, #000000 50%);
+                background-clip: text;
+                color: transparent;
+            }
+        </style>
+    </head>
+    <body>
+        <div id = "text">
+
+        </div>
+        <script>
+            const gCP = "#0cff00";
+            const gCS = "#000000";
+            document.getElementById("text").innerHTML = getNewText();
+            onmousemove = e => {
+                document.getElementById("text").innerHTML = getNewText();
+                let rect = document.getElementById('text').getBoundingClientRect();
+                let x = (e.clientX - rect.left) / rect.width * 100;
+                let y = (e.clientY - rect.top) / rect.height * 100;
+                if (x < 30){x = 30;} if (x > 70){x = 70;} if (y < 30){y = 30;} if (y > 70){y = 70;}
+
+                document.getElementById('text').style.backgroundImage = 
+                    `radial-gradient(circle at ${x}% ${y}%, ${gCP} ${0}%,  ${gCS} ${50}%)`;
+
+            };
+
+            function getNewText(){
+                let numOfChars = 1500;
+                let text = '';
+                let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                for (let i = 0; i < numOfChars; i++){
+                    text += possible[Math.floor(Math.random() * possible.length)];
+                }
+                return text;
+            }
+                
+        </script>
+    </body>
+</html>
