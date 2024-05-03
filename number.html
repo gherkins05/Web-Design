@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                background-color: #000000; 
+                margin: 0; 
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .container {
+                display: flex;
+                justify-content: center;
+                max-height: 15vh;
+                overflow: hidden;
+            }
+
+            .Character {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 15vh;
+                color: #00ff00;
+                writing-mode: vertical-rl;
+                text-orientation: upright;
+                margin-top: 0vh;
+                margin-right: -4vh;
+                margin-left: -4vh;
+            }
+
+            .number {
+                margin-right: -3vh;
+                margin-left: -3vh;
+                --m: 0vh;
+                --t: 0vh;
+                --h: 0vh;
+            }
+
+            @keyframes million {
+                to {
+                    transform: translateY(var(--m));
+                }
+            }
+
+            @keyframes thousand {
+                to {
+                    transform: translateY(var(--t));
+                }
+            }
+
+            @keyframes hundred {
+                to {
+                    transform: translateY(var(--h));
+                }
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <div id = "box" class="container">
+            <div id = "0" class="Character">£</div>
+            <div id = "1" class="Character Number Million">0123456789</div>
+            <div id = "2" class="Character">,</div>
+            <div id = "3" class="Character Number Thousand">012345678901234567890123456789</div>
+            <div id = "4" class="Character Number Thousand">012345678901234567890123456789</div>
+            <div id = "5" class="Character Number Thousand">012345678901234567890123456789</div>
+            <div id = "6" class="Character">,</div>
+            <div id = "7" class="Character Number Hundred">01234567890123456789012345678901234567890123456789</div>
+            <div id = "8" class="Character Number Hundred">01234567890123456789012345678901234567890123456789</div>
+            <div id = "9" class="Character Number Hundred">01234567890123456789012345678901234567890123456789</div>
+        </div>
+        <script>
+            const charHeight = 16.77;
+
+            function getRandomInt(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            setInterval(function() {
+                let randomNumber = getRandomInt(1000000, 9999999).toString();
+                updateNumber(randomNumber)
+            }, 1500);
+
+            function updateNumber(newNumber){
+                // Get all the .Number divs
+                let numberDivs = document.querySelectorAll('.Number');
+
+                // Iterate over the .Number divs
+                numberDivs.forEach(function(div, i) {
+                    // Get the id of the div
+                    let id = div.id;
+
+                    // Update the slide
+                    updateSlide(id, Number(newNumber[i]));
+                });
+            }
+
+            function updateSlide(id, newValue){
+                const slider = document.getElementById(id);
+                const offset_1 = 0;
+                const offset_345 = 20;
+                const offset_789 = 40;
+                let newTop;
+                let offset;
+                let type;
+                if (id == '1'){
+                    offset = offset_1;
+                    type = 'million';
+
+                    newTop = newValue * -charHeight;
+                    slider.style.animation = 'none';
+                    slider.style.setProperty('--m', newTop + 'vh');
+                    void slider.offsetWidth;
+                    slider.style.animation = 'million 1s forwards';
+                } else if (id == '3' || id == '4' || id == '5'){
+                    offset = offset_345;
+                    type = 'thousand';
+                    newTop = (newValue + 20) * -charHeight;
+                    slider.style.animation = 'none';
+                    slider.style.setProperty('--t', newTop + 'vh');
+                    void slider.offsetWidth;
+                    slider.style.animation = 'thousand 1s forwards';
+                } else if (id == '7' || id == '8' || id == '9'){
+                    newTop = (newValue + 40) * -charHeight;
+                    slider.style.animation = 'none';
+                    slider.style.setProperty('--h', newTop + 'vh');
+                    void slider.offsetWidth;
+                    slider.style.animation = 'hundred 1s forwards';
+                }
+            }
+        </script>
+    </body>
+</html>
