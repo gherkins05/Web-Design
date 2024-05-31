@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <body>
+
+    <button onclick="download()">Download</button>
+
+    <script>
+        function kmlDataChecker(kmlData){
+            var parser = new DOMParser();
+            var xmlDoc;
+            try {
+                xmlDoc = parser.parseFromString(kmlData, "text/xml");
+            } catch (error) {
+                alert("Invalid KML data: " + error);
+                return False;
+            }
+
+            if (xmlDoc.getElementsByTagName("kml").length === 0 || xmlDoc.getElementsByTagName("Placemark").length === 0) {
+                alert("Invalid KML data");
+                return False;
+            }
+
+            return True;
+        }
+
+        function download(kmlData) {
+            if (!kmlDataChecker(kmlData)){
+                return;
+            }
+            // Create new blob with KML inputted data
+            var data = new Blob([kmlData], {type: 'application/vnd.google-earth.kml+xml'});
+            var url = window.URL.createObjectURL(data);
+
+            // Create download link and click it
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = 'file.kml';
+            link.click();
+
+            // Clean up by revoking the object URL
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
+
+    </body>
+</html>
