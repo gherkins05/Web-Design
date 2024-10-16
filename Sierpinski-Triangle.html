@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+            }
+            canvas {
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas"></canvas>
+        <script>
+            class Triangle {
+                constructor (points, color, depth, ctx) {
+                    this.color = color;
+                    this.triangles = [];
+                    this.points = points;
+                    this.depth = depth;
+                    this.draw(ctx, this.points);
+                    this.generateTriangles(ctx, this.depth - 1);
+                }
+
+                draw(ctx, points, color) {
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.moveTo(points[0][0], points[0][1]);
+                    ctx.lineTo(points[1][0], points[1][1]);
+                    ctx.lineTo(points[2][0], points[2][1]);
+                    ctx.closePath();
+                    ctx.stroke();
+                    ctx.fill();
+                }
+
+                getCenterOfLine(point1, point2) {
+                    return [(point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2];
+                }
+
+                generateTriangles(ctx, depth) {
+                    //Draw white triangle, then append 3 new triangles
+                    let points = [];
+                    for (let i = 0; i < 3; i++) {
+                        points[i] = this.getCenterOfLine(this.points[i], this.points[(i + 1) % 3]);
+                    }
+
+                    //Draw white triangle
+                    this.draw(ctx, points, 'white');
+
+                    //Generate 3 new triangles
+                    if (depth > 0) {
+                        this.triangles.push(new Triangle([this.points[0], points[0], points[2]], 'black', depth, ctx));
+                        this.triangles.push(new Triangle([this.points[1], points[0], points[1]], 'black', depth, ctx));
+                        this.triangles.push(new Triangle([this.points[2], points[1], points[2]], 'black', depth, ctx));
+                    }
+                }
+            }
+
+            function generatePoints(topPoint, sideLength) {
+                let centerX = topPoint[0];
+                let centerY = topPoint[1];
+                let height = Math.sqrt(3) / 2 * sideLength;
+                let points = [0, 0, 0];
+                points[0] = [centerX, centerY];
+                points[1] = [centerX + sideLength / 2, centerY + height];
+                points[2] = [centerX - sideLength / 2, centerY + height];
+                return points;
+            }
+
+            // Sierpinski Triangle
+            const canvas = document.getElementById('canvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const ctx = canvas.getContext('2d');
+
+            const startingPoints = generatePoints([canvas.width / 2, 0], 1024);
+
+            const triangle = new Triangle(startingPoints, 'black', 8, ctx);
+        </script>
+    </body>
+</html>

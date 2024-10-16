@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+                background-color: #ffffff;
+            }
+            canvas {
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas"></canvas>
+        <script>
+
+            // Sierpinski Triangle
+            const canvas = document.getElementById('canvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const ctx = canvas.getContext('2d');
+
+            class Square {
+                constructor (center, sideLength, depth, ctx) {
+                    this.center = center;
+                    this.sideLength = sideLength;
+                    this.depth = depth;
+                    this.draw(ctx, this.center, this.sideLength);
+                    this.generateSquares(ctx, this.depth - 1);
+                }
+
+                draw(ctx, center, sideLength) {
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(center[0] - sideLength / 2, center[1] - sideLength / 2, sideLength, sideLength);
+
+                    ctx.strokeStyle = 'white';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(center[0] - sideLength / 2, center[1] - sideLength / 2, sideLength, sideLength);
+                }
+
+                generateSquares(ctx, depth) {
+                    if (depth > 0) {
+                        const newCenters = [
+                            [this.center[0] - this.sideLength / 2, this.center[1] - this.sideLength / 2],
+                            [this.center[0] + this.sideLength / 2, this.center[1] - this.sideLength / 2],
+                            [this.center[0] - this.sideLength / 2, this.center[1] + this.sideLength / 2],
+                            [this.center[0] + this.sideLength / 2, this.center[1] + this.sideLength / 2]
+                        ];
+
+                        for (let i = 0; i < 4; i++) {
+                            new Square(newCenters[i], this.sideLength / 2, depth, ctx);
+                        }
+                    }
+                }
+            }
+
+            const center = [canvas.width / 2, canvas.height / 2];
+            const sideLength = 500;
+
+            newSquare = new Square(center, sideLength, 8, ctx);
+        </script>
+    </body>
+</html>
